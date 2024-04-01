@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .sidebar {
+    @apply w-64 fixed -left-[100%] sm:left-0 top-0 bg-[#272e38] z-50 transition-[width];
+  }
+  .sidebar.active {
+    @apply left-0 w-64 z-[100] sm:w-[60px];
+  }
+  .sidebar.active #brand {
+    @apply w-64 sm:w-[60px];
+  }
+
+  .sidebar.active:hover {
+    @apply sm:left-0 sm:w-64 z-[100];
+  }
+  .sidebar.active:hover #brand {
+    @apply sm:w-64;
+  }
+
+  .sidebar.active:hover #brand a h2,
+  .sidebar.active:hover #sidebar-menu a span {
+    @apply sm:flex;
+  }
+
+  .sidebar.active #brand a h2,
+  .sidebar.active #sidebar-menu a span {
+    @apply block sm:hidden;
+  }
+
+  .sidebar.active #sidebar-menu .sidebar-submenu {
+    @apply block sm:hidden;
+  }
+
+  .sidebar.active:hover #sidebar-menu .sidebar-submenu a span {
+    @apply sm:inline;
+  }
+  .main-container {
+    @apply ml-0 sm:ml-64 transition-[margin-left];
+  }
+
+  .main-container.active {
+    @apply ml-0 sm:ml-[60px];
+  }
+
+  .main-container.active header {
+    @apply left-0 w-full sm:left-[60px] sm:w-[calc(100vw-77px)];
+  }
+
+  .has-sidebar-subitem.active {
+    @apply text-white;
+  }
+
+  .icon.active {
+    @apply transform rotate-90;
+  }
+
+  #sidebar-menu::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #272e38;
+  }
+
+  #sidebar-menu::-webkit-scrollbar {
+    width: 8px;
+    background-color: #424c5c;
+  }
+
+  #sidebar-menu::-webkit-scrollbar-thumb {
+    background-color: #424c5c;
+    border: 2px solid #424c5c;
+  }
+
+  #sidebar-menu::scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #424c5c;
+  }
+
+  #sidebar-menu {
+    scrollbar-width: thin;
+    scrollbar-color: #424c5c transparent;
+  }
+}
