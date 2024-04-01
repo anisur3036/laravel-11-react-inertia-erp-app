@@ -23,26 +23,14 @@ export default function Authenticated({
 
   const subMenusList = [
     {
-      name: "build",
+      name: "Masters",
       icon: RiBuilding3Line,
       menus: [
         {
           id: 1,
-          name: "ABC",
-          url: "/dashboard",
-          menuRoute: "dashboard",
-        },
-        {
-          id: 2,
-          name: "Auth",
-          url: "/auths",
-          menuRoute: "auth",
-        },
-        {
-          id: 3,
-          name: "Packagess",
-          url: "/packagess",
-          menuRoute: "packages",
+          name: "Colors",
+          url: "color.index",
+          menuRoute: "color.index",
         },
       ],
     },
@@ -50,24 +38,7 @@ export default function Authenticated({
       name: "analytics",
       icon: TbReportAnalytics,
       menus: [
-        {
-          id: 1,
-          name: "Profile",
-          url: "/profile",
-          nameRoute: "profile.t",
-        },
-        {
-          id: 2,
-          name: "Auth",
-          url: "/auth",
-          nameRoute: "auth",
-        },
-        {
-          id: 3,
-          name: "Packages",
-          url: "/packages",
-          nameRoute: "packages",
-        },
+        { id: 1, name: "Profile", url: "dashboard", nameRoute: "dashboard" },
       ],
     },
   ];
