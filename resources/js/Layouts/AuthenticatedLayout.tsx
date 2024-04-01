@@ -3,6 +3,12 @@ import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import { Link } from "@inertiajs/react";
 import { User } from "@/types";
+import { AiOutlineAppstore } from "react-icons/ai";
+import { BsPerson } from "react-icons/bs";
+import { HiOutlineDatabase } from "react-icons/hi";
+import { RiBuilding3Line } from "react-icons/ri";
+import { TbReportAnalytics } from "react-icons/tb";
+import SubMenu from "@/Components/SubMenu";
 
 export default function Authenticated({
   user,
@@ -14,6 +20,57 @@ export default function Authenticated({
   const closeSidebarMenu = () => {
     setIsSidebarActive(false);
   };
+
+  const subMenusList = [
+    {
+      name: "build",
+      icon: RiBuilding3Line,
+      menus: [
+        {
+          id: 1,
+          name: "ABC",
+          url: "/dashboard",
+          menuRoute: "dashboard",
+        },
+        {
+          id: 2,
+          name: "Auth",
+          url: "/auths",
+          menuRoute: "auth",
+        },
+        {
+          id: 3,
+          name: "Packagess",
+          url: "/packagess",
+          menuRoute: "packages",
+        },
+      ],
+    },
+    {
+      name: "analytics",
+      icon: TbReportAnalytics,
+      menus: [
+        {
+          id: 1,
+          name: "Profile",
+          url: "/profile",
+          nameRoute: "profile.t",
+        },
+        {
+          id: 2,
+          name: "Auth",
+          url: "/auth",
+          nameRoute: "auth",
+        },
+        {
+          id: 3,
+          name: "Packages",
+          url: "/packages",
+          nameRoute: "packages",
+        },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -53,25 +110,51 @@ export default function Authenticated({
         </div>
         <nav
           id="sidebar-menu"
-          className="mt-14 mb-8 overflow-y-scroll h-screen pb-14"
+          className="mt-14 py-2 mb-8 overflow-y-scroll h-screen pb-14"
         >
           <section className="px-4">
-            <h3 className="py-4 text-sm font-semibold text-gray-500 overflow-hidden">
+            <small className="pl-3 text-slate-500 inline-block mb-2">
               Menu
-            </h3>
+            </small>
           </section>
-          <section className="px-4">
-            <h3 className="py-4 text-sm font-semibold text-gray-500 overflow-hidden">
-              Section
-            </h3>
-            <div className="pl-2 flex flex-col space-y-3 py-2">
-              <Link
-                className="flex items-center text-gray-400 hover:text-gray-300"
-                href="/"
-              >
-                <span className="flex-none">Menu Items</span>
-              </Link>
-            </div>
+          <section className="flex flex-col h-full">
+            <ul className="whitespace-pre px-2.5 text[0.9rem] py-5 flex flex-col gap-1 font-medium">
+              <li>
+                <Link href="/" className={"link text-gray-100"}>
+                  <AiOutlineAppstore
+                    size={23}
+                    className="text-gray-100 min-w-max"
+                  />
+                  All Apps
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className={"link text-gray-100"}>
+                  <BsPerson size={23} className="text-gray-100 min-w-max" />
+                  Authentication
+                </Link>
+              </li>
+
+              <div className="">
+                <small className="pl-3 text-slate-500 inline-block mb-2">
+                  Product categories
+                </small>
+                {subMenusList?.map((menu) => (
+                  <div key={menu.name} className="flex flex-col gap-1">
+                    <SubMenu data={menu} />
+                  </div>
+                ))}
+              </div>
+              <li>
+                <Link href="/" className={"link text-gray-100"}>
+                  <HiOutlineDatabase
+                    size={23}
+                    className="text-gray-100 min-w-max"
+                  />
+                  Storage
+                </Link>
+              </li>
+            </ul>
           </section>
         </nav>
       </div>
