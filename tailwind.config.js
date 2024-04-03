@@ -4,6 +4,7 @@ import scrollBar from "tailwind-scrollbar";
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ["class"],
   content: [
     "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
     "./storage/framework/views/*.php",
@@ -15,6 +16,10 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+      },
+      colors: {
+        background: "rgb(var(--background) / <alpha-value>)",
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
       },
     },
   },

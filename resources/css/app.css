@@ -2,12 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: 0 115 179;
+    --foreground: 255 0 179;
+  }
+
+  /* .dark {
+    --background: 255 115 179;
+    --foreground: 255 0 179;
+  } */
+}
+
 @layer components {
   .link {
     @apply p-2.5 flex rounded-md gap-6 items-center md:cursor-pointer cursor-default duration-300 font-medium;
   }
   .sidebar {
-    @apply w-64 fixed -left-[100%] sm:left-0 top-0 bg-[#272e38] z-50 transition-[width];
+    @apply w-64 fixed -left-[100%] sm:left-0 top-0 bg-slate-700 z-50 transition-[width];
   }
   .sidebar.active {
     @apply left-0 w-64 z-[100] sm:w-[60px];
@@ -53,7 +65,7 @@
   }
 
   .has-sidebar-subitem.active {
-    @apply text-white;
+    @apply text-white dark:text-slate-400;
   }
 
   .icon.active {

@@ -8,7 +8,9 @@ const SubMenu = ({ data }) => {
   return (
     <>
       <li
-        className={`link ${route().current() && "text-gray-100"}`}
+        className={`link ${
+          route().current() && "text-gray-100 dark:text-slate-400"
+        }`}
         onClick={() => setSubMenuOpen(!subMenuOpen)}
       >
         <data.icon size={23} className="min-w-max" />
@@ -35,7 +37,9 @@ const SubMenu = ({ data }) => {
             <Link
               href={route(menu.url)}
               className={`p-2.5 flex rounded-md gap-6 items-center md:cursor-pointer cursor-default duration-300 font-medium capitalize ${
-                route().current(menu.nameRoute) ? "text-gray-500" : ""
+                route().current(menu.nameRoute)
+                  ? "text-slate-400 dark:text-slate-500"
+                  : ""
               } `}
             >
               {menu.name}

@@ -9,6 +9,13 @@ import { HiOutlineDatabase } from "react-icons/hi";
 import { RiBuilding3Line } from "react-icons/ri";
 import { TbReportAnalytics } from "react-icons/tb";
 import SubMenu from "@/Components/SubMenu";
+import {
+  MagnifyingGlassIcon,
+  MoonIcon,
+  SunIcon,
+} from "@heroicons/react/16/solid";
+import { IoMoon, IoSunny } from "react-icons/io5";
+import { IoIosDesktop } from "react-icons/io";
 
 export default function Authenticated({
   user,
@@ -16,6 +23,39 @@ export default function Authenticated({
   children,
 }: PropsWithChildren<{ user: User; header?: ReactNode }>) {
   const [isSidebarActive, setIsSidebarActive] = useState(false);
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") ? localStorage.getItem("theme") : "system"
+  );
+  const element = document.documentElement;
+  const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function onWindowMatch() {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) && darkQuery.matches)
+    ) {
+      element.classList.add("dark");
+    } else {
+      element.classList.remove("dark");
+    }
+  }
+  onWindowMatch();
+  useEffect(() => {
+    switch (theme) {
+      case "dark":
+        element.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+        break;
+      case "light":
+        element.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+        break;
+      default:
+        localStorage.removeItem("theme");
+        onWindowMatch();
+        break;
+    }
+  }, [theme]);
 
   const closeSidebarMenu = () => {
     setIsSidebarActive(false);
@@ -55,8 +95,8 @@ export default function Authenticated({
         >
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center font-bold">
-              <ApplicationLogo className="block h-9 w-auto" />
-              <h2 className="pl-2 text-2xl">SKCL</h2>
+              <ApplicationLogo className="block h-9 w-auto text-slate-100 dark:text-slate-400" />
+              <h2 className="pl-2 text-2xl dark:text-slate-400">SKCL</h2>
             </Link>
             <button
               onClick={closeSidebarMenu}
@@ -91,17 +131,26 @@ export default function Authenticated({
           <section className="flex flex-col h-full">
             <ul className="whitespace-pre px-2.5 text[0.9rem] py-5 flex flex-col gap-1 font-medium">
               <li>
-                <Link href="/" className={"link text-gray-100"}>
+                <Link
+                  href="/"
+                  className={"link text-gray-100 dark:text-slate-400"}
+                >
                   <AiOutlineAppstore
                     size={23}
-                    className="text-gray-100 min-w-max"
+                    className="text-gray-100 dark:text-slate-400 min-w-max"
                   />
                   All Apps
                 </Link>
               </li>
               <li>
-                <Link href="/" className={"link text-gray-100"}>
-                  <BsPerson size={23} className="text-gray-100 min-w-max" />
+                <Link
+                  href="/"
+                  className={"link text-gray-100 dark:text-slate-400"}
+                >
+                  <BsPerson
+                    size={23}
+                    className="text-gray-100 dark:text-slate-400 min-w-max"
+                  />
                   Authentication
                 </Link>
               </li>
@@ -117,10 +166,13 @@ export default function Authenticated({
                 ))}
               </div>
               <li>
-                <Link href="/" className={"link text-gray-100"}>
+                <Link
+                  href="/"
+                  className={"link text-gray-100 dark:text-slate-400"}
+                >
                   <HiOutlineDatabase
                     size={23}
-                    className="text-gray-100 min-w-max"
+                    className="text-gray-100 dark:text-slate-400 min-w-max"
                   />
                   Storage
                 </Link>
@@ -133,13 +185,13 @@ export default function Authenticated({
         id="main-container"
         className={isSidebarActive ? "main-container active" : "main-container"}
       >
-        <header className="flex items-center justify-between fixed left-0 h-14 sm:left-64 bg-white w-full sm:w-[calc(100%-256px)] top-0 z-50 p-2 shadow">
+        <header className="flex items-center justify-between fixed left-0 h-14 text-gray-800 dark:text-slate-400 sm:left-64 bg-white dark:bg-slate-700 w-full sm:w-[calc(100%-256px)] top-0 z-50 p-2 shadow">
           <div className="flex items-center">
             <button
               onClick={() =>
                 setIsSidebarActive((previousState) => !previousState)
               }
-              className="menu-btn"
+              className="menu-btn flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +199,7 @@ export default function Authenticated({
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="w-6 h-6 cursor-pointer"
+                className="w-6 h-6 cursor-pointer shrink-0"
               >
                 <path
                   strokeLinecap="round"
@@ -156,14 +208,12 @@ export default function Authenticated({
                 />
               </svg>
             </button>
-            <span>Welcome</span>
+            <span className="pl-2.5">Welcome</span>
           </div>
           <div className="relative flex items-center sm:w-[400px]">
-            {/* <MagnifyingGlassIcon
-          className="w-5 h-5 absolute left-[8px] text-gray-400"
-        /> */}
+            <MagnifyingGlassIcon className="w-5 h-5 absolute left-[8px] text-gray-400 dark:text-slate-500" />
             <input
-              className="pl-8 w-full py-1 rounded-full border-gray-300 focus:ring-1 focus:ring-gray-50"
+              className="pl-8 w-full py-1 dark:bg-slate-800 dark:text-slate-400 rounded-full border-gray-300 dark:border-slate-600 focus:ring-1 focus:ring-gray-50 dark:focus:ring-slate-500 dark:placeholder-slate-500"
               type="text"
               name="search"
               placeholder="Search..."
@@ -175,7 +225,7 @@ export default function Authenticated({
                 <span className="inline-flex rounded-md">
                   <button
                     type="button"
-                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-slate-400  bg-white dark:bg-slate-700 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                   >
                     {user.name}
 
@@ -196,6 +246,29 @@ export default function Authenticated({
               </Dropdown.Trigger>
 
               <Dropdown.Content>
+                <div className="px-4 py-4 flex items-center duration-100 gap-4">
+                  <button onClick={() => setTheme("light")}>
+                    <IoSunny
+                      className={`w-4 text-slate-400 ${
+                        theme === "light" && "text-red-500"
+                      }`}
+                    />
+                  </button>
+                  <button onClick={() => setTheme("dark")}>
+                    <IoMoon
+                      className={`w-4 text-slate-400 ${
+                        theme === "dark" && "text-red-500"
+                      }`}
+                    />
+                  </button>
+                  <button onClick={() => setTheme("system")}>
+                    <IoIosDesktop
+                      className={`w-4 text-slate-400 ${
+                        theme === "system" && "text-red-500"
+                      }`}
+                    />
+                  </button>
+                </div>
                 <Dropdown.Link href={route("profile.edit")}>
                   Profile
                 </Dropdown.Link>
@@ -206,7 +279,7 @@ export default function Authenticated({
             </Dropdown>
           </div>
         </header>
-        <main className="mt-14 min-h-[calc(100vh)] bg-gray-100">
+        <main className="mt-14 min-h-[calc(100vh)] bg-gray-100 dark:bg-slate-800">
           {children}
         </main>
       </div>
