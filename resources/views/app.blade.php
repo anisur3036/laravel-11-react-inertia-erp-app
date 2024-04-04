@@ -18,7 +18,7 @@
     @inertiaHead
 </head>
 
-<body class="font-sans antialiased dark:bg-background">
+<body class="font-sans antialiased text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
     @inertia
 </body>
 

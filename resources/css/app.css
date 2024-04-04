@@ -4,12 +4,12 @@
 
 @layer base {
   :root {
-    --background: 0 115 179;
+    --text: 148 163 184;
     --foreground: 255 0 179;
   }
 
   /* .dark {
-    --background: 255 115 179;
+    --text-color: 148 163 184;
     --foreground: 255 0 179;
   } */
 }
@@ -19,7 +19,7 @@
     @apply p-2.5 flex rounded-md gap-6 items-center md:cursor-pointer cursor-default duration-300 font-medium;
   }
   .sidebar {
-    @apply w-64 fixed -left-[100%] sm:left-0 top-0 bg-slate-700 z-50 transition-[width];
+    @apply w-64 fixed -left-[100%] sm:left-0 top-0 bg-slate-900 dark:bg-slate-900 z-50 transition-[width];
   }
   .sidebar.active {
     @apply left-0 w-64 z-[100] sm:w-[60px];
