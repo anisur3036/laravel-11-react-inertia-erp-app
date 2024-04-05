@@ -62,8 +62,8 @@ export default function Authenticated({
         {
           id: 1,
           name: 'Colors',
-          url: 'color.index',
-          menuRoute: 'color.index'
+          url: 'colors.index',
+          menuRoute: 'colors.index'
         }
       ]
     },

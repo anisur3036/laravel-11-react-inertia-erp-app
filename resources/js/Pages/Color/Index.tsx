@@ -1,21 +1,53 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import Dropdown from '@/Components/Dropdown'
-import { Head } from '@inertiajs/react'
-import {
-  HiArrowDown,
-  HiArrowUp,
-  HiChevronDown,
-  HiChevronUp,
-  HiDotsHorizontal,
-  HiPencil,
-  HiTrash
-} from 'react-icons/hi'
+import { Head, router } from '@inertiajs/react'
+import { HiPencil, HiSearch, HiTrash } from 'react-icons/hi'
 import { useState } from 'react'
 import { PageProps } from '@/types'
 import TableHeading from '@/Components/TableHeading'
+import Pagination from '@/Components/Pagination'
 
-export default function Dashboard({ auth, colors }: PageProps) {
+interface ColorType {
+  id: number
+  name: string
+  user: object
+  created_at: string
+}
+
+export default function Dashboard({ auth, colors, queryParams = null }: PageProps) {
   const [showDropdownActionBtn, setShowDropdownActionBtn] = useState(false)
+
+  queryParams = queryParams || {}
+
+  const searchFieldChanged = (name, value) => {
+    if (value) {
+      queryParams[name] = value
+      queryParams['page'] = 1
+    } else {
+      delete queryParams[name]
+    }
+
+    router.get(route('colors.index'), queryParams)
+  }
+
+  const onKeyPress = (name, e) => {
+    if (e.key !== 'Enter') return
+    searchFieldChanged(name, e.target.value)
+  }
+
+  const sortBy = (name) => {
+    if (name === queryParams.sort_field) {
+      if (queryParams.direction === 'asc') {
+        queryParams.direction = 'desc'
+      } else {
+        queryParams.direction = 'asc'
+      }
+    } else {
+      queryParams.sort_field = name
+      queryParams.direction = 'asc'
+    }
+    router.get(route('colors.index'), queryParams)
+  }
+
   return (
     <AuthenticatedLayout user={auth.user}>
       <Head title="Color" />
@@ -29,66 +61,68 @@ export default function Dashboard({ auth, colors }: PageProps) {
                 <div className="bg-white dark:bg-slate-900 dark:border dark:border-slate-800 relative shadow-md sm:rounded-lg overflow-hidden">
                   <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div className="w-full md:w-1/2">
-                      <form className="flex items-center">
+                      <div className="flex items-center">
                         <label htmlFor="simple-search" className="sr-only">
                           Search
                         </label>
                         <div className="relative w-full">
                           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg
-                              aria-hidden="true"
-                              className="w-5 h-5 text-slate-500 dark:text-slate-400"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
+                            <HiSearch className="w-5 h-5 text-sky-100" />
                           </div>
                           <input
                             type="text"
                             id="simple-search"
+                            onBlur={(e) => searchFieldChanged('name', e.target.value)}
+                            onKeyUp={(e) => onKeyPress('name', e)}
+                            defaultValue={queryParams.name}
                             className="bg-slate-50 border border-slate-300 text-sky-300 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full pl-10 p-2 dark:bg-slate-800 dark:border-slate-600 dark:placeholder-slate-400 dark:text-sky-300 dark:focus:ring-slate-500 dark:focus:border-slate-500"
                             placeholder="Search"
-                            required
                           />
                         </div>
-                      </form>
+                      </div>
                     </div>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left text-gray-800 dark:text-sky-300">
-                      <thead className="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-800 border-b dark:border-slate-800 dark:text-sky-200">
+                    <table className="w-full text-sm text-left text-gray-800 dark:text-sky-600">
+                      <thead className="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-800 border-b dark:border-slate-800 dark:text-sky-300">
                         <tr>
-                          <TableHeading name="Name" />
-                          <TableHeading name="Category" />
-                          <TableHeading name="Brand" />
-                          <TableHeading name="Description" />
-                          <th scope="col" className="px-4 py-3">
-                            Price
-                          </th>
+                          <TableHeading
+                            name="name"
+                            sort_field={queryParams.sort_field}
+                            direction={queryParams.direction}
+                            sortBy={sortBy}
+                          >
+                            Name
+                          </TableHeading>
+                          <TableHeading
+                            name="user"
+                            sort_field={queryParams.sort_field}
+                            direction={queryParams.direction}
+                            sortBy={sortBy}
+                          >
+                            Created by
+                          </TableHeading>
+                          <TableHeading
+                            name="created_at"
+                            sort_field={queryParams.sort_field}
+                            direction={queryParams.direction}
+                            sortBy={sortBy}
+                          >
+                            Created at
+                          </TableHeading>
                           <th scope="col" className="px-4 py-3">
                             <span className="sr-only">Actions</span>
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {Array.from([1, 2, 3, 4, 5, 6]).map((item) => (
-                          <tr className="border-b dark:border-slate-800">
-                            <th
-                              scope="row"
-                              className="px-4 py-3 font-medium text-slate-800 whitespace-nowrap dark:text-sky-100"
-                            >
-                              Apple iMac 27"
+                        {colors.data.map((color: ColorType) => (
+                          <tr key={color.id} className="border-b dark:border-slate-800">
+                            <th scope="row" className="px-4 py-3 font-medium whitespace-nowra">
+                              {color.name}
                             </th>
-                            <td className="px-4 py-3">PC</td>
-                            <td className="px-4 py-3">Apple</td>
-                            <td className="px-4 py-3">300</td>
-                            <td className="px-4 py-3">$2999</td>
+                            <td className="px-4 py-3">{color.user.name}</td>
+                            <td className="px-4 py-3">{color.created_at}</td>
                             <td className="px-4 py-3 flex items-center justify-end">
                               <div className="flex items-center gap-4">
                                 <button>
@@ -105,19 +139,10 @@ export default function Dashboard({ auth, colors }: PageProps) {
                     </table>
                   </div>
                   <nav
-                    className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                    className="flex flex-col md:flex-row justify-center items-center md:items-center space-y-3 md:space-y-0 p-4"
                     aria-label="Table navigation"
                   >
-                    <span className="text-sm font-normal text-gray-500 dark:text-sky-200/75">
-                      Showing
-                      <span className="font-semibold text-gray-900 dark:text-sky-200/75">1-10</span>
-                      of
-                      <span className="font-semibold text-gray-900 dark:text-sky-200/75">1000</span>
-                    </span>
-                    <ul className="inline-flex items-stretch -space-x-px">
-                      <li>A
-                      </li>
-                    </ul>
+                    <Pagination links={colors.meta.links} />
                   </nav>
                 </div>
               </div>

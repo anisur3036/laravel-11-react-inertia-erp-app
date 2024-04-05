@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::resource('/color', ColorController::class);
+    Route::resource('/colors', ColorController::class);
 });
 
 require __DIR__.'/auth.php';

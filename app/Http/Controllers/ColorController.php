@@ -17,11 +17,12 @@ class ColorController extends Controller
         $colors = Color::query()
                 ->with('user')
                 ->when(request('name'), fn($query) => $query->where('name', 'like', '%'. request('name') .'%'))
-                ->latest()
-                ->paginate(10);
+                ->orderBy(request('sort_field', 'name'), request('direction', 'asc'))
+                ->paginate(3)->onEachSide(1)->withQueryString();
 
         return inertia('Color/Index', [
             'colors' => ColorResource::collection($colors),
+            'queryParams' => request()->query() ?: null,
         ]);
 
     }
