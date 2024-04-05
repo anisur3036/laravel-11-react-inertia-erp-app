@@ -18,13 +18,17 @@ export default function TableHeading({
             <HiChevronUp
               className={
                 'w-4 ' +
-                (sort_field === name && direction === 'asc' ? 'text-sky-500' : 'text-slate-600')
+                (sort_field === name && direction === 'asc'
+                  ? 'text-slate-900 dark:text-sky-500'
+                  : 'text-slate-300 dark:text-slate-600')
               }
             />
             <HiChevronDown
               className={
                 'w-4 -mt-2 ' +
-                (sort_field === name && direction === 'desc' ? 'text-sky-500' : 'text-slate-600')
+                (sort_field === name && direction === 'desc'
+                  ? 'text-slate-900 dark:text-sky-500'
+                  : 'text-slate-300 dark:text-slate-600')
               }
             />
           </span>

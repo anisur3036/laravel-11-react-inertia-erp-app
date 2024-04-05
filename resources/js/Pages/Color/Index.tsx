@@ -139,7 +139,7 @@ export default function Dashboard({ auth, colors, queryParams = null }: PageProp
                     </table>
                   </div>
                   <nav
-                    className="flex flex-col md:flex-row justify-center items-center md:items-center space-y-3 md:space-y-0 p-4"
+                    className="flex flex-row justify-end md:justify-center items-center md:items-center space-y-3 md:space-y-0 p-4"
                     aria-label="Table navigation"
                   >
                     <Pagination links={colors.meta.links} />
