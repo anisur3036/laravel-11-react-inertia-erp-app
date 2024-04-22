@@ -17,8 +17,8 @@ class ColorController extends Controller
         $colors = Color::query()
                 ->with('user')
                 ->when(request('name'), fn($query) => $query->where('name', 'like', '%'. request('name') .'%'))
-                ->orderBy(request('sort_field', 'name'), request('direction', 'asc'))
-                ->paginate(3)->onEachSide(1)->withQueryString();
+                ->orderBy(request('sort_field', 'created_at'), request('direction', 'desc'))
+                ->paginate(10)->onEachSide(1)->withQueryString();
 
         return inertia('Color/Index', [
             'colors' => ColorResource::collection($colors),
@@ -28,43 +28,20 @@ class ColorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreColorRequest $request)
     {
-        //
+        auth()->user()->colors()->create($request->validated());
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Color $color)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Color $color)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateColorRequest $request, Color $color)
     {
-        //
+        $color->update($request->validated());
     }
 
     /**
@@ -72,6 +49,6 @@ class ColorController extends Controller
      */
     public function destroy(Color $color)
     {
-        //
+        $color->delete();
     }
 }

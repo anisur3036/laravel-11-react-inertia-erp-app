@@ -1,21 +1,21 @@
+// @ts-nocheck
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Head, router } from '@inertiajs/react'
+import { Head, router, useForm } from '@inertiajs/react'
 import { HiPencil, HiSearch, HiTrash } from 'react-icons/hi'
-import { useState } from 'react'
-import { PageProps } from '@/types'
+import { useState, FormEventHandler } from 'react'
 import TableHeading from '@/Components/TableHeading'
 import Pagination from '@/Components/Pagination'
+import Modal from '@/Components/Modal'
+import PrimaryButton from '@/Components/PrimaryButton'
+import InputLabel from '@/Components/InputLabel'
+import TextInput from '@/Components/TextInput'
+import SecondaryButton from '@/Components/SecondaryButton'
+import InputError from '@/Components/InputError'
 
-interface ColorType {
-  id: number
-  name: string
-  user: object
-  created_at: string
-}
-
-export default function Dashboard({ auth, colors, queryParams = null }: PageProps) {
+export default function Index({ auth, colors, queryParams = {} }) {
   const [showDropdownActionBtn, setShowDropdownActionBtn] = useState(false)
 
+  //data table functionality
   queryParams = queryParams || {}
 
   const searchFieldChanged = (name, value) => {
@@ -46,6 +46,49 @@ export default function Dashboard({ auth, colors, queryParams = null }: PageProp
       queryParams.direction = 'asc'
     }
     router.get(route('colors.index'), queryParams)
+  }
+
+  // from processing
+  const [formMode, setFormMode] = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const [colorId, setColorId] = useState(null)
+  const [defaultColorData, setDefaultColorData] = useState({})
+
+  const { data, setData, post, put, processing, errors, reset } = useForm({
+    name: defaultColorData.name || ''
+  })
+
+  const createUser = () => {
+    setShowModal(true)
+    setFormMode('Create')
+    setColorId(null)
+    setDefaultColorData({})
+  }
+
+  const submit: FormEventHandler = (e) => {
+    e.preventDefault()
+    if (formMode === 'Create') {
+      post(route('colors.store'), {
+        onSuccess: () => {
+          reset()
+          setShowModal(false)
+        }
+      })
+    } else {
+      put(route('colors.update', defaultColorData.id), {
+        onSuccess: () => {
+          reset()
+          setShowModal(false)
+        }
+      })
+    }
+  }
+
+  const updateUser = (color) => {
+    setShowModal(true)
+    setFormMode('Update')
+    setColorId(color.id)
+    setDefaultColorData(color)
   }
 
   return (
@@ -81,6 +124,7 @@ export default function Dashboard({ auth, colors, queryParams = null }: PageProp
                         </div>
                       </div>
                     </div>
+                    <PrimaryButton onClick={createUser}>New</PrimaryButton>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-gray-800 dark:text-sky-600">
@@ -116,7 +160,7 @@ export default function Dashboard({ auth, colors, queryParams = null }: PageProp
                         </tr>
                       </thead>
                       <tbody>
-                        {colors.data.map((color: ColorType) => (
+                        {colors.data.map((color) => (
                           <tr key={color.id} className="border-b dark:border-slate-800">
                             <th scope="row" className="px-4 py-3 font-medium whitespace-nowra">
                               {color.name}
@@ -125,7 +169,7 @@ export default function Dashboard({ auth, colors, queryParams = null }: PageProp
                             <td className="px-4 py-3">{color.created_at}</td>
                             <td className="px-4 py-3 flex items-center justify-end">
                               <div className="flex items-center gap-4">
-                                <button>
+                                <button onClick={() => updateUser(color)}>
                                   <HiPencil className="w-6 text-slate-500 dark:text-sky-300" />
                                 </button>
                                 <button>
@@ -150,6 +194,37 @@ export default function Dashboard({ auth, colors, queryParams = null }: PageProp
           </div>
         </div>
       </div>
+      {/* modal */}
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <div className="dark:bg-slate-900 p-4 rounded-lg w-full">
+          <h2 className="py-4">{formMode === 'Create' ? 'Create Color' : `Update color`}</h2>
+          <form onSubmit={submit} className="my-4">
+            <div className="grid grid-cols-3 gap-4">
+              <InputLabel
+                htmlFor="name"
+                className="col-span-1 dark:text-sky-300"
+                value="Color name"
+              />
+              <div className="col-span-2 flex flex-col gap-2">
+                <TextInput
+                  type="text"
+                  id="name"
+                  value={data.name}
+                  className="w-full dark:bg-slate-700"
+                  onChange={(e) => setData('name', e.target.value)}
+                />
+                <InputError message={errors.name} className="mt-2" />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-end gap-4">
+              <SecondaryButton onClick={() => setShowModal(false)}>Cancel</SecondaryButton>
+              <PrimaryButton disabled={processing} className={processing && 'bg-gray-400'}>
+                Save
+              </PrimaryButton>
+            </div>
+          </form>
+        </div>
+      </Modal>
     </AuthenticatedLayout>
   )
 }
